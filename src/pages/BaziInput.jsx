@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useKey } from '../App.jsx';
 import { calculateBaziChart } from '../lib/bazi.js';
 
 export default function BaziInput() {
-  const { apiKey } = useKey();
   const navigate = useNavigate();
   const [form, setForm] = useState({ year:1990, month:1, day:1, hour:12, minute:0, gender:'男' });
   const [loading, setLoading] = useState(false);
@@ -12,7 +10,6 @@ export default function BaziInput() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!apiKey) { setError('请先在首页输入 API Key'); return; }
     setLoading(true); setError('');
 
     try {
@@ -22,10 +19,10 @@ export default function BaziInput() {
       });
 
       const prompt = buildPrompt(chart);
-      const resp = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      const resp = await fetch('/api/deepseek', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-        body: JSON.stringify({ model: 'deepseek-chat', messages: [
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: prompt },
         ], temperature: 0.6, max_tokens: 3000 }),

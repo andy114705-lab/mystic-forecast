@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useKey } from '../App.jsx';
 
 function matchYongShen(q) {
   if (/事业|工作|升迁|职场|跳槽|求职/.test(q)) return ['官鬼'];
@@ -16,7 +15,6 @@ function matchYongShen(q) {
 }
 
 export default function LiuyaoInput() {
-  const { apiKey } = useKey();
   const navigate = useNavigate();
   const [question, setQuestion] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,7 +22,6 @@ export default function LiuyaoInput() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!apiKey) { setError('请先输入 API Key'); return; }
     if (!question.trim()) { setError('请输入你要问的事'); return; }
     setLoading(true); setError('');
 
@@ -64,10 +61,10 @@ export default function LiuyaoInput() {
 
       // LLM
       const prompt = `请断此卦：\n\`\`\`json\n${JSON.stringify(chart, null, 2)}\n\`\`\``;
-      const resp = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      const resp = await fetch('/api/deepseek', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-        body: JSON.stringify({ model: 'deepseek-chat', messages: [
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [
           { role: 'system', content: LIUYAO_SYSTEM },
           { role: 'user', content: prompt },
         ], temperature: 0.6, max_tokens: 2000 }),
