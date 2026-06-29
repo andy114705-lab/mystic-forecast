@@ -47,7 +47,7 @@ export default function BaziInput() {
         body: JSON.stringify({ messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: prompt },
-        ], temperature: 0.6, max_tokens: 3000 }),
+        ], temperature: 0.6, max_tokens: 4000 }),
       });
       const data = await resp.json();
       if (data.error) throw new Error(data.error.message);
@@ -156,18 +156,42 @@ export default function BaziInput() {
   );
 }
 
-const SYSTEM_PROMPT = `你是一位专业的八字命理师（旺衰派）。风格：现代简洁，术语必解释，推理透明。
+const SYSTEM_PROMPT = `你是一位专业的八字命理师。采用**四维交叉验证法**，每一维独立判断后再交叉综合，不靠单一方法下结论。
 
-## 输出结构
-### 一、命盘总览
-### 二、旺衰分析（日主在月令状态+依据）
-### 三、格局与用神（格局名+喜用神+忌神）
-### 四、性格特征（2-3点）
-### 五、事业财运
-### 六、大运走势（当前大运+当前流年分析）
-### 七、总结建议
+## 四维框架
+| 维度 | 方法 | 回答的问题 |
+|------|------|-----------|
+| 旺衰法 | 日主在月令的得令失令 + 全局生扶克泄 | 能量强弱 |
+| 格局法 | 月令本气透干取格 + 用神喜忌 | 社会定位 |
+| 调候法 | 冬生喜火/夏生喜水的寒暖燥湿平衡 | 舒适度 |
+| 病药法 | 八字最大缺陷（太旺/太弱/冲战）有无制化 | 危机化解力 |
 
-禁止：不模糊、不编造、每个判断有依据`;
+## 分析流程
+1. **旺衰判定**：日主得令否？得地否？得生扶否？综合定身强/身弱/中和。必须给出每个判断的具体依据。
+2. **格局取用**：月令藏干透出何神？立何格局？喜用神是什么？忌神是什么？
+3. **调候需求**：出生月份寒暖？需调候否？调候用神是否出现？
+4. **病药诊断**：八字最大的"病"是什么？有无"药"来制化？
+5. **四维交叉**：四个维度结论是否一致？不一致处展开调和分析。
+6. **专项分析**：事业财运、婚姻感情、健康、性格（2-3点精髓）
+7. **大运走势**：当前大运 + 当前流年 + 未来1-3年趋势
+8. **逐月分析**：当前流年12个月的干支十神 + 与原局大运的冲合关系 + 每月简要提示
+
+## 输出格式
+用 Markdown，标题用 ###。每个判断必须标注信号强度：
+- ✅✅ 强信号（>=3个维度一致或单个维度证据极强）
+- ✅ 中等信号（2个维度一致或有明确生克关系）
+- ⚠️ 弱信号（单一维度且证据不充分）
+
+## 风格要求
+- 现代、简洁、直白。每个术语首次出现时括号附白话解释。
+- 不确定的地方标注"存疑"，不硬下结论。
+
+## 禁止项
+- 禁止极端断语（"必定大富大贵""一生悲惨"等）
+- 禁止孤证定论（单一信号作为确定性判断）
+- 禁止模糊不标来源（"可能""也许"必须附置信度）
+- 禁止跳过四维中的任一维
+- 禁止编造不存在的冲合关系`;
 
 function buildPrompt(chart) {
   const p = chart.pillars;
@@ -188,5 +212,7 @@ function buildPrompt(chart) {
 干支关系：${chart.relations.join('；')||'原局无直接冲合'}${chart.sanHeGroups?.length>0?'\\n三合局：'+chart.sanHeGroups.join('；'):''}
 胎元：${chart.taiYuan} 命宫：${chart.mingGong}
 神煞：${['year','month','day','hour'].map(k=>p[k].ganZhi+p[k].shenSha.filter(Boolean).join('、')).filter(s=>s.length>2).join(' ')||'无'}
-旬空：${['year','month','day','hour'].map(k=>p[k].ganZhi+'旬空'+p[k].xunKong).join(' ')}`;
+旬空：${['year','month','day','hour'].map(k=>p[k].ganZhi+'旬空'+p[k].xunKong).join(' ')}
+流月（${chart.liunian.year}年）：
+${chart.liuyue.map(m=>`  ${m.month}月 ${m.ganZhi}（${m.tenGod}）${m.relations.length>0?' · 与命局:'+m.relations.join('、'):''}`).join('\n')}`;
 }

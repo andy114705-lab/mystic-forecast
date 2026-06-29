@@ -225,6 +225,23 @@ export default function BaziResult() {
         </div>
       </Section>
 
+      {/* ─── 流月 ─── */}
+      {chart.liuyue?.length > 0 && (
+        <Section title={`📆 ${chart.liunian.year}年流月`} defaultOpen={false}>
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+            {chart.liuyue.map((m, i) => (
+              <div key={i} className={`bg-white/[0.03] rounded-lg p-2 text-center ${m.relations.length > 0 ? 'ring-1 ring-purple-500/20' : ''}`}>
+                <div className="text-white/30 text-[10px]">{m.month}月</div>
+                <div className="text-white/80 text-sm font-medium">{m.ganZhi}</div>
+                <div className="text-gold-400 text-[10px]">{m.tenGod}</div>
+                {m.relations.length > 0 && <div className="text-purple-300/60 text-[10px] mt-0.5">{m.relations.join(' ')}</div>}
+              </div>
+            ))}
+          </div>
+          <div className="text-white/20 text-[10px] mt-2 text-center">按月柱干支+十神排列，紫色边框=与命局有冲合关系的月份</div>
+        </Section>
+      )}
+
       {/* ─── 推导链 ─── */}
       {chart.steps?.length > 0 && (
         <Section title="🔍 推导链（专业人员可逐步核对）" defaultOpen={false}>

@@ -272,6 +272,22 @@ export function calculateBaziChart({ birthYear, birthMonth, birthDay, birthHour,
     detail:`地支六冲：${CHONG_NAMES}\n地支六合：${HE_NAMES}\n三合局：申子辰化水、亥卯未化木、寅午戌化火、巳酉丑化金\n\n原局分析：\n${rels.length>0?rels.map(r=>`  ${r}`).join('\n'):'  四柱地支之间无直接冲合关系。'}${sanHeGroups.length>0?'\n三合局：\n'+sanHeGroups.map(s=>`  ${s}`).join('\n'):''}`
   });
 
+  // ─── 流月计算 ───
+  const liuyue = [];
+  for (let m = 1; m <= 12; m++) {
+    const midSolar = Solar.fromYmdHms(cy, m, 15, 12, 0, 0);
+    const midBz = midSolar.getLunar().getEightChar();
+    const mGan = midBz.getMonthGan(), mZhi = midBz.getMonthZhi();
+    const mTenGod = SHI_SHEN[dayMaster + mGan] || '?';
+    // Month branch relations with original chart branches
+    const mRels = [];
+    for (const b of brs) {
+      if (CHONG[b.z] === mZhi) mRels.push(`冲${b.n}${b.z}`);
+      if (LIU_HE[b.z] === mZhi) mRels.push(`合${b.n}${b.z}`);
+    }
+    liuyue.push({ month: m, ganZhi: mGan+mZhi, tenGod: mTenGod, relations: mRels });
+  }
+
   return {
     name,
     basic: {
@@ -287,7 +303,7 @@ export function calculateBaziChart({ birthYear, birthMonth, birthDay, birthHour,
     pattern: { name: pn[tg]||`${tg}格`, yueLingQi: yueQ, tenGod: tg },
     dayun, liunian, relations: rels, sanHeGroups,
     taiYuan: bz.getTaiYuan(), mingGong: bz.getMingGong(),
-    steps, // 推导链
+    steps, liuyue,
   };
 }
 

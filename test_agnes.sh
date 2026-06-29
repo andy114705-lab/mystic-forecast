@@ -1,0 +1,1 @@
+curl -s --proxy http://127.0.0.1:17891 -X POST https://apihub.agnes-ai.com/v1/chat/completions -H 'Authorization: Bearer *** -H 'Content-Type: application/json' -d @test_agnes.json
