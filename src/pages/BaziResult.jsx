@@ -1,4 +1,5 @@
 import { useLocation, Link } from 'react-router-dom';
+import Markdown from '../components/Markdown.jsx';
 
 export default function BaziResult() {
   const { state } = useLocation();
@@ -49,9 +50,7 @@ export default function BaziResult() {
       {/* AI 解读 */}
       <div className="glow-card p-6 mt-4">
         <h2 className="text-gold-400 text-lg mb-4">AI 解读</h2>
-        <div className="prose prose-invert prose-sm max-w-none whitespace-pre-wrap text-white/80 leading-relaxed">
-          {interpretation}
-        </div>
+        <Markdown text={interpretation} />
       </div>
 
       <div className="text-center mt-4 text-xs text-white/20">

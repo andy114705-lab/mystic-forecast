@@ -1,12 +1,39 @@
 // 八字排盘引擎（浏览器版）
-import { Solar } from 'lunar-javascript';
+import { Solar, Lunar } from 'lunar-javascript';
 
 const GAN_WX = { 甲:'木',乙:'木',丙:'火',丁:'火',戊:'土',己:'土',庚:'金',辛:'金',壬:'水',癸:'水' };
 const ZHI_WX = { 子:'水',丑:'土',寅:'木',卯:'木',辰:'土',巳:'火',午:'火',未:'土',申:'金',酉:'金',戌:'土',亥:'水' };
 
-export function calculateBaziChart({ birthYear, birthMonth, birthDay, birthHour, birthMinute=0, gender }) {
+export function calculateBaziChart({ birthYear, birthMonth, birthDay, birthHour, birthMinute=0, gender, calendarType='solar', longitude=120, name='' }) {
   const isMale = gender === '男';
-  const solar = Solar.fromYmdHms(birthYear, birthMonth, birthDay, birthHour, birthMinute, 0);
+  let solar;
+  let lunarNote = '';
+
+  // 农历转换
+  if (calendarType === 'lunar') {
+    const lunar = Lunar.fromYmd(birthYear, birthMonth, birthDay);
+    solar = lunar.getSolar();
+    lunarNote = `（农历${birthYear}年${birthMonth}月${birthDay}日）`;
+  } else {
+    solar = Solar.fromYmdHms(birthYear, birthMonth, birthDay, birthHour, birthMinute, 0);
+  }
+
+  // 真太阳时修正
+  let solarHour = birthHour, solarMinute = birthMinute, timeOffset = 0;
+  if (calendarType !== 'lunar') {
+    // 只有阳历输入时做真太阳时修正（农历已转为阳历，出生时间是钟表时间）
+    const totalMin = birthHour * 60 + birthMinute + (longitude - 120) * 4;
+    let adj = Math.round(((totalMin % 1440) + 1440) % 1440);
+    solarHour = Math.floor(adj / 60);
+    solarMinute = adj % 60;
+    timeOffset = Math.round((longitude - 120) * 4);
+  }
+
+  // 用修正后的时间重新构建 Solar
+  if (timeOffset !== 0) {
+    solar = Solar.fromYmdHms(birthYear, birthMonth, birthDay, solarHour, solarMinute, 0);
+  }
+
   const lunar = solar.getLunar();
   const bz = lunar.getEightChar();
   const dayMaster = bz.getDayGan();
@@ -86,10 +113,13 @@ export function calculateBaziChart({ birthYear, birthMonth, birthDay, birthHour,
   }
 
   return {
+    name,
     basic: {
       公历: `${birthYear}-${String(birthMonth).padStart(2,'0')}-${String(birthDay).padStart(2,'0')} ${String(birthHour).padStart(2,'0')}:${String(birthMinute).padStart(2,'0')}`,
       农历: `${lunar.getYearInGanZhi()}年 ${lunar.getMonthInChinese()}月 ${lunar.getDayInChinese()}日`,
       生肖: lunar.getYearShengXiao(), 星座: solar.getXingZuo(), 日主: dayMaster, 性别: gender,
+      ...(lunarNote && { 阴历备注: lunarNote }),
+      ...(timeOffset !== 0 && { 真太阳时: `${String(solarHour).padStart(2,'0')}:${String(solarMinute).padStart(2,'0')}（修正${timeOffset>0?'+':''}${timeOffset}分钟）` }),
     },
     pillars, dayMaster, fiveElements: fe,
     strength: { dayMasterDiShi: dmDiShi, level, detail: `日主${dayMaster}生于${pillars.month.zhi}月，处于「${dmDiShi}」地` },
