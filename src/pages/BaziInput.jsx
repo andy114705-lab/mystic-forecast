@@ -21,9 +21,8 @@ export default function BaziInput() {
   }, [citySearch]);
 
   const solarOffset = useMemo(() => {
-    if (form.calendarType !== 'solar') return 0;
     return trueSolarMinutes(+form.hour, +form.minute, +form.lng).offset;
-  }, [form.calendarType, form.hour, form.minute, form.lng]);
+  }, [form.hour, form.minute, form.lng]);
 
   const selectCity = (c) => {
     setForm({ ...form, city: c.n, lng: c.lng, manualLng: false });
@@ -131,7 +130,7 @@ export default function BaziInput() {
             </div>
           )}
           {form.city && <p className="text-xs text-white/30 mt-1 ml-1">📍 {form.city}（{form.lng}°E）</p>}
-          {form.calendarType === 'solar' && solarOffset !== 0 && (
+          {solarOffset !== 0 && (
             <p className="text-xs text-teal-400/70 mt-1 ml-1">
               ⏱ 真太阳时修正 {solarOffset > 0 ? '+' : ''}{solarOffset} 分钟
             </p>

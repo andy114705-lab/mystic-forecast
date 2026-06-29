@@ -8,31 +8,32 @@ export function calculateBaziChart({ birthYear, birthMonth, birthDay, birthHour,
   const isMale = gender === '男';
   let solar;
   let lunarNote = '';
+  let solarYear, solarMonth, solarDay;
 
-  // 农历转换
+  // 第1步：日期转换（阴历 → 阳历）
   if (calendarType === 'lunar') {
-    const lunar = Lunar.fromYmd(birthYear, birthMonth, birthDay);
-    solar = lunar.getSolar();
+    const l = Lunar.fromYmd(birthYear, birthMonth, birthDay);
+    solar = l.getSolar();
     lunarNote = `（农历${birthYear}年${birthMonth}月${birthDay}日）`;
+    solarYear = solar.getYear();
+    solarMonth = solar.getMonth();
+    solarDay = solar.getDay();
   } else {
-    solar = Solar.fromYmdHms(birthYear, birthMonth, birthDay, birthHour, birthMinute, 0);
+    solarYear = birthYear;
+    solarMonth = birthMonth;
+    solarDay = birthDay;
   }
 
-  // 真太阳时修正
-  let solarHour = birthHour, solarMinute = birthMinute, timeOffset = 0;
-  if (calendarType !== 'lunar') {
-    // 只有阳历输入时做真太阳时修正（农历已转为阳历，出生时间是钟表时间）
-    const totalMin = birthHour * 60 + birthMinute + (longitude - 120) * 4;
-    let adj = Math.round(((totalMin % 1440) + 1440) % 1440);
-    solarHour = Math.floor(adj / 60);
-    solarMinute = adj % 60;
-    timeOffset = Math.round((longitude - 120) * 4);
-  }
+  // 第2步：真太阳时修正（始终执行，与日历类型无关）
+  // 用户输入的时间是出生地钟表时间，需换算为当地真太阳时
+  const totalMin = birthHour * 60 + birthMinute + (longitude - 120) * 4;
+  let adj = Math.round(((totalMin % 1440) + 1440) % 1440);
+  const solarHour = Math.floor(adj / 60);
+  const solarMinute = adj % 60;
+  const timeOffset = Math.round((longitude - 120) * 4);
 
-  // 用修正后的时间重新构建 Solar
-  if (timeOffset !== 0) {
-    solar = Solar.fromYmdHms(birthYear, birthMonth, birthDay, solarHour, solarMinute, 0);
-  }
+  // 第3步：用阳历日期 + 真太阳时构建 Solar 对象
+  solar = Solar.fromYmdHms(solarYear, solarMonth, solarDay, solarHour, solarMinute, 0);
 
   const lunar = solar.getLunar();
   const bz = lunar.getEightChar();
