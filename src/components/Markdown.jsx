@@ -4,7 +4,9 @@ import { useMemo } from 'react';
 export default function Markdown({ text }) {
   const html = useMemo(() => {
     if (!text) return '';
-    return marked.parse(text, { breaks: true, gfm: true });
+    // Normalize: trim leading spaces before headings (LLM sometimes adds them)
+    const normalized = text.replace(/^[ \t]+(#{1,6}\s)/gm, '$1');
+    return marked.parse(normalized, { breaks: true, gfm: true });
   }, [text]);
 
   return (

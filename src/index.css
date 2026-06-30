@@ -140,6 +140,17 @@ body {
 
 /* Markdown prose */
 .prose-custom { max-width: none; }
+.prose-custom h2 {
+  font-family: Georgia, 'Noto Serif SC', serif;
+  color: #2c2416;
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 36px;
+  margin-bottom: 16px;
+  letter-spacing: 0.04em;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #c43a31;
+}
 .prose-custom h3 {
   font-family: Georgia, 'Noto Serif SC', serif;
   color: #2c2416;

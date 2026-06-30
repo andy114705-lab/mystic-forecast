@@ -37,7 +37,7 @@ export default function LiuyaoResult() {
 
   return (
     <div className="max-w-3xl mx-auto p-6 pt-8 pb-16 animate-fade-in">
-      <Link to="/liuyao" className="text-xs tracking-[0.05em] hover:opacity-70 transition-opacity" style={{ color: '#8b7355' }}>
+      <Link to="/liuyao" className="text-sm tracking-[0.05em] hover:opacity-70 transition-opacity" style={{ color: '#8b7355' }}>
         ← 重新占卜
       </Link>
 

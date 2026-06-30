@@ -136,9 +136,14 @@ export default function BaziResult() {
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6 pt-8 pb-16 animate-fade-in">
       {/* Back */}
-      <Link to="/bazi" className="text-xs tracking-[0.05em] hover:opacity-70 transition-opacity" style={{ color: '#8b7355' }}>
-        ← 重新排盘
-      </Link>
+      <div className="flex items-center justify-between mb-6">
+        <Link to="/bazi" className="text-sm tracking-[0.05em] hover:opacity-70 transition-opacity" style={{ color: '#8b7355' }}>
+          ← 重新排盘
+        </Link>
+        <Link to="/" className="text-sm tracking-[0.05em] hover:opacity-70 transition-opacity" style={{ color: '#8b7355' }}>
+          玄机
+        </Link>
+      </div>
 
       {/* Title */}
       <h1 
@@ -244,9 +249,9 @@ export default function BaziResult() {
         <Section title={`${chart.liunian.year}年流月`} defaultOpen={false}>
           <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
             {chart.liuyue.map((m, i) => (
-              <div key={i} className="p-3 text-center" style={{
+              <div key={i} className="p-3 text-center border" style={{
                 background: 'rgba(0,0,0,0.01)',
-                border: m.relations.length > 0 ? '1px solid rgba(196,58,49,0.15)' : '1px solid transparent'
+                borderColor: m.relations.length > 0 ? 'rgba(196,58,49,0.25)' : '#e0d8c8'
               }}>
                 <div className="text-[10px] mb-1" style={{ color: '#8b7355' }}>{m.month}月</div>
                 <div className="text-sm font-bold" style={{ color: '#2c2416' }}>{m.ganZhi}</div>
@@ -270,7 +275,7 @@ export default function BaziResult() {
 
       {/* AI Interpretation */}
       <div className="card p-8 my-5" style={{ background: '#fffdf7', border: '1px solid #e0d8c8' }}>
-        <div className="section-title mb-8">AI 综合解读</div>
+        <div className="section-title mb-8">深度解读</div>
         <Markdown text={interpretation} />
       </div>
 
