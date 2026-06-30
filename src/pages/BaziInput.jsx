@@ -32,14 +32,12 @@ export default function BaziInput() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); setError('');
-
     try {
       const chart = calculateBaziChart({
         birthYear: +form.year, birthMonth: +form.month, birthDay: +form.day,
         birthHour: +form.hour, birthMinute: +form.minute, gender: form.gender,
         calendarType: form.calendarType, longitude: +form.lng, name: form.name.trim(),
       });
-
       const prompt = buildPrompt(chart);
       const resp = await fetch('/api/deepseek', {
         method: 'POST',
@@ -51,7 +49,6 @@ export default function BaziInput() {
       });
       const data = await resp.json();
       if (data.error) throw new Error(data.error.message);
-
       navigate('/bazi/result', { state: { chart, interpretation: data.choices[0].message.content, tokens: data.usage } });
     } catch (err) {
       setError(err.message);
@@ -60,96 +57,141 @@ export default function BaziInput() {
     }
   };
 
+  const Label = ({ children }) => (
+    <div className="text-[11px] text-white/25 uppercase tracking-[0.1em] mb-1.5">{children}</div>
+  );
+
   return (
-    <div className="max-w-lg mx-auto p-6 pt-12">
-      <h2 className="text-2xl text-gold-400 mb-8 text-center">八字命盘</h2>
-      <form onSubmit={handleSubmit} className="glow-card p-6 space-y-4">
-        {/* 姓名 */}
-        <input type="text" placeholder="姓名（选填）" value={form.name}
-          onChange={e => setForm({...form, name: e.target.value})} className="glow-input w-full" />
+    <div className="max-w-2xl mx-auto p-6 pt-16 animate-fade-in">
+      {/* Header */}
+      <div className="mb-12 text-center">
+        <h2 className="text-3xl tracking-[0.1em] mb-2" 
+          style={{ fontFamily: "Georgia, 'Noto Serif SC', serif", color: '#c9a55c' }}>
+          八字命盘
+        </h2>
+        <p className="text-white/15 text-xs tracking-[0.2em] uppercase">Four Pillars of Destiny</p>
+      </div>
 
-        {/* 阳历/阴历 */}
-        <div className="flex gap-2">
-          {[{k:'solar',l:'☀ 阳历'},{k:'lunar',l:'🌙 阴历'}].map(t => (
-            <button key={t.k} type="button" onClick={() => setForm({...form, calendarType: t.k})}
-              className={`flex-1 py-2 rounded-lg text-sm transition-all ${form.calendarType === t.k ? 'bg-purple-500 text-white' : 'bg-white/5 text-white/40'}`}>
-              {t.l}
-            </button>
-          ))}
+      <form onSubmit={handleSubmit} className="space-y-8">
+        {/* Row 1: 姓名 */}
+        <div>
+          <Label>姓名 / 称谓</Label>
+          <input type="text" placeholder="选填，用于称呼" value={form.name}
+            onChange={e => setForm({...form, name: e.target.value})} className="input w-full" />
         </div>
 
-        {/* 日期 */}
-        <div className="grid grid-cols-3 gap-3">
-          <input type="number" placeholder="年" value={form.year}
-            onChange={e => setForm({...form, year: e.target.value})} className="glow-input" />
-          <input type="number" placeholder="月" value={form.month}
-            onChange={e => setForm({...form, month: e.target.value})} className="glow-input" />
-          <input type="number" placeholder="日" value={form.day}
-            onChange={e => setForm({...form, day: e.target.value})} className="glow-input" />
-        </div>
-
-        {/* 时间 */}
-        <div className="grid grid-cols-2 gap-3">
-          <input type="number" placeholder="时(0-23)" value={form.hour}
-            onChange={e => setForm({...form, hour: e.target.value})} className="glow-input" />
-          <input type="number" placeholder="分" value={form.minute}
-            onChange={e => setForm({...form, minute: e.target.value})} className="glow-input" />
-        </div>
-
-        {/* 城市 / 经度 */}
-        <div className="relative">
-          <div className="flex gap-2 items-center">
-            {form.manualLng ? (
-              <div className="flex gap-2 w-full">
-                <input type="number" step="0.1" placeholder="经度（如 116.4）" value={form.lng}
-                  onChange={e => setForm({...form, lng: +e.target.value})}
-                  className="glow-input flex-1" />
-                <button type="button" onClick={() => setForm({...form, manualLng: false, city: ''})}
-                  className="text-xs text-white/30 hover:text-white/60 px-2">选城市</button>
-              </div>
-            ) : (
-              <>
-                <input type="text" placeholder="搜索城市..." value={citySearch}
-                  onChange={e => setCitySearch(e.target.value)}
-                  onFocus={() => setCitySearch(citySearch || form.city)}
-                  className="glow-input flex-1" />
-                <button type="button" onClick={() => setForm({...form, manualLng: true, city: ''})}
-                  className="text-xs text-white/30 hover:text-white/60 px-2">手输经度</button>
-              </>
-            )}
+        {/* Row 2: 日历类型 */}
+        <div>
+          <Label>历法</Label>
+          <div className="flex gap-2">
+            {[{k:'solar',l:'阳历'},{k:'lunar',l:'阴历'}].map(t => (
+              <button key={t.k} type="button" onClick={() => setForm({...form, calendarType: t.k})}
+                className={`btn-toggle flex-1 ${form.calendarType === t.k ? 'active' : ''}`}>
+                {t.l}
+              </button>
+            ))}
           </div>
-          {citySearch && !form.manualLng && (
-            <div className="absolute z-20 mt-1 w-full bg-cosmic-800 border border-purple-400/15 rounded-lg max-h-48 overflow-y-auto shadow-xl">
-              {filteredCities.map(c => (
-                <div key={c.n} onClick={() => selectCity(c)}
-                  className="px-3 py-2 cursor-pointer hover:bg-purple-500/20 text-sm text-white/70 flex justify-between">
-                  <span>{c.n}</span>
-                  <span className="text-white/30">{c.lng}°E</span>
-                </div>
+          <p className="text-white/15 text-xs mt-1.5 ml-1">
+            {form.calendarType === 'solar' ? '公历（格里高利历）日期' : '农历日期，自动转换为公历排盘'}
+          </p>
+        </div>
+
+        {/* Row 3: 出生日期 */}
+        <div>
+          <Label>出生日期</Label>
+          <div className="grid grid-cols-[2fr_1fr_1fr] gap-3">
+            <input type="number" placeholder="年份" value={form.year}
+              onChange={e => setForm({...form, year: e.target.value})} className="input" />
+            <input type="number" placeholder="月" value={form.month}
+              onChange={e => setForm({...form, month: e.target.value})} className="input" />
+            <input type="number" placeholder="日" value={form.day}
+              onChange={e => setForm({...form, day: e.target.value})} className="input" />
+          </div>
+        </div>
+
+        {/* Row 4: 时间 + 性别 */}
+        <div className="grid grid-cols-[1fr_1fr] gap-6">
+          <div>
+            <Label>出生时间</Label>
+            <div className="grid grid-cols-2 gap-2">
+              <input type="number" placeholder="时 (0-23)" value={form.hour}
+                onChange={e => setForm({...form, hour: e.target.value})} className="input" />
+              <input type="number" placeholder="分" value={form.minute}
+                onChange={e => setForm({...form, minute: e.target.value})} className="input" />
+            </div>
+          </div>
+          <div>
+            <Label>性别</Label>
+            <div className="flex gap-2">
+              {['男','女'].map(g => (
+                <button key={g} type="button" onClick={() => setForm({...form, gender: g})}
+                  className={`btn-toggle flex-1 ${form.gender === g ? 'active' : ''}`}>
+                  {g}
+                </button>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Row 5: 出生地点 */}
+        <div>
+          <Label>出生地点</Label>
+          <div className="relative">
+            {form.manualLng ? (
+              <div className="flex gap-2">
+                <input type="number" step="0.1" placeholder="输入经度，如 116.4" value={form.lng}
+                  onChange={e => setForm({...form, lng: +e.target.value})} className="input flex-1" />
+                <button type="button" onClick={() => setForm({...form, manualLng: false, city: ''})}
+                  className="text-xs text-white/20 hover:text-white/40 px-3 whitespace-nowrap">
+                  选城市
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <input type="text" placeholder="搜索城市名称..." value={citySearch}
+                  onChange={e => setCitySearch(e.target.value)}
+                  onFocus={() => setCitySearch(citySearch || form.city)}
+                  className="input flex-1" />
+                <button type="button" onClick={() => setForm({...form, manualLng: true, city: ''})}
+                  className="text-xs text-white/20 hover:text-white/40 px-3 whitespace-nowrap">
+                  手输经度
+                </button>
+              </div>
+            )}
+            {citySearch && !form.manualLng && (
+              <div className="absolute z-20 mt-1 w-full bg-ink-800 border border-white/[0.06] max-h-56 overflow-y-auto">
+                {filteredCities.map(c => (
+                  <div key={c.n} onClick={() => selectCity(c)}
+                    className="px-4 py-3 cursor-pointer hover:bg-cinnabar-500/10 text-sm text-white/60 flex justify-between border-b border-white/[0.03]">
+                    <span>{c.n}</span>
+                    <span className="text-white/20">{c.lng}°E</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          {form.city && (
+            <p className="text-white/20 text-xs mt-2 ml-1">
+              {form.city} · 经度 {form.lng}°E
+            </p>
           )}
-          {form.city && <p className="text-xs text-white/30 mt-1 ml-1">📍 {form.city}（{form.lng}°E）</p>}
           {solarOffset !== 0 && (
-            <p className="text-xs text-teal-400/70 mt-1 ml-1">
-              ⏱ 真太阳时修正 {solarOffset > 0 ? '+' : ''}{solarOffset} 分钟
+            <p className="text-cinnabar-400/70 text-xs mt-1 ml-1">
+              真太阳时修正 {solarOffset > 0 ? '+' : ''}{solarOffset} 分钟
             </p>
           )}
         </div>
 
-        {/* 性别 */}
-        <div className="flex gap-3">
-          {['男','女'].map(g => (
-            <button key={g} type="button" onClick={() => setForm({...form, gender: g})}
-              className={`flex-1 py-2 rounded-lg transition-all ${form.gender === g ? 'bg-purple-500 text-white' : 'bg-white/5 text-white/40'}`}>
-              {g}
-            </button>
-          ))}
-        </div>
+        {/* Error */}
+        {error && (
+          <div className="bg-cinnabar-500/10 border border-cinnabar-500/20 px-4 py-3 text-cinnabar-300 text-sm">
+            {error}
+          </div>
+        )}
 
-        {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-        <button type="submit" disabled={loading} className="glow-btn w-full">
-          {loading ? '排盘中...' : '开始排盘解读'}
+        {/* Submit */}
+        <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 text-base">
+          {loading ? '排盘中 ···' : '开始排盘解读'}
         </button>
       </form>
     </div>
@@ -170,7 +212,7 @@ const SYSTEM_PROMPT = `你是一位专业的八字命理师。采用**四维交�
 1. **旺衰判定**：日主得令否？得地否？得生扶否？综合定身强/身弱/中和。必须给出每个判断的具体依据。
 2. **格局取用**：月令藏干透出何神？立何格局？喜用神是什么？忌神是什么？
 3. **调候需求**：出生月份寒暖？需调候否？调候用神是否出现？
-4. **病药诊断**：八字最大的"病"是什么？有无"药"来制化？
+4. **病药诊断**：八字最大的「病」是什么？有无「药」来制化？
 5. **四维交叉**：四个维度结论是否一致？不一致处展开调和分析。
 6. **专项分析**：事业财运、婚姻感情、健康、性格（2-3点精髓）
 7. **大运走势**：当前大运 + 当前流年 + 未来1-3年趋势
@@ -184,12 +226,12 @@ const SYSTEM_PROMPT = `你是一位专业的八字命理师。采用**四维交�
 
 ## 风格要求
 - 现代、简洁、直白。每个术语首次出现时括号附白话解释。
-- 不确定的地方标注"存疑"，不硬下结论。
+- 不确定的地方标注「存疑」，不硬下结论。
 
 ## 禁止项
-- 禁止极端断语（"必定大富大贵""一生悲惨"等）
+- 禁止极端断语（「必定大富大贵」「一生悲惨」等）
 - 禁止孤证定论（单一信号作为确定性判断）
-- 禁止模糊不标来源（"可能""也许"必须附置信度）
+- 禁止模糊不标来源（「可能」「也许」必须附置信度）
 - 禁止跳过四维中的任一维
 - 禁止编造不存在的冲合关系`;
 
