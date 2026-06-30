@@ -56,25 +56,39 @@ export default function BaziResult() {
   const sections = {};
   const sectionOrder = [];
   if (interpretation) {
-    const parts = interpretation.split(/\n## /);
+    // Split on ## at line start (with optional preceding newline)
+    const parts = interpretation.split(/(?:^|\n)## /);
     for (const part of parts) {
       const trimmed = part.trim();
       if (!trimmed) continue;
       const nlIdx = trimmed.indexOf('\n');
-      const title = nlIdx > 0 ? trimmed.substring(0, nlIdx).trim() : trimmed;
+      const rawTitle = nlIdx > 0 ? trimmed.substring(0, nlIdx).trim() : trimmed;
+      // Strip any remaining ## prefix
+      const title = rawTitle.replace(/^##\s*/, '');
       const content = nlIdx > 0 ? trimmed.substring(nlIdx + 1).trim() : '';
-      // Skip the score line in content
-      const cleanContent = content.replace(/\[评分\].*/g, '').trim();
-      sections[title] = cleanContent;
-      sectionOrder.push(title);
+      const cleanContent = content.replace(/\[评分\].*/gs, '').trim();
+      if (title && (cleanContent || nlIdx < 0)) {
+        sections[title] = cleanContent;
+        sectionOrder.push(title);
+      }
     }
   }
+  console.log('Parsed sections:', Object.keys(sections)); // debug
 
-  // Find specific sections
-  const siweiContent = sections['四维交叉验证'] || sections['四维交叉验证分析'] || '';
-  const liunianContent = sections['流年分析'] || '';
-  const adviceContent = sections['核心建议'] || '';
-  // Fallback: if sections not found, use raw interpretation
+  // Find specific sections (fuzzy match)
+  const findSection = (...keys) => {
+    for (const k of keys) {
+      if (sections[k]) return sections[k];
+      // Try partial match
+      for (const sk of Object.keys(sections)) {
+        if (sk.includes(k) || k.includes(sk)) return sections[sk];
+      }
+    }
+    return '';
+  };
+  const siweiContent = findSection('四维交叉验证', '四维', '交叉验证', '综合分析');
+  const liunianContent = findSection('流年分析', '流年');
+  const adviceContent = findSection('核心建议', '建议');
   const mainContent = (siweiContent || liunianContent || adviceContent) ? '' : interpretation;
 
   // For mobile tab switching
@@ -214,6 +228,9 @@ export default function BaziResult() {
                 <InfoRow label="大运十神" value={chart.liunian?.dayunTenGod || '—'} />
                 <InfoRow label="流年十神" value={chart.liunian?.tenGod || '—'} />
               </div>
+              <div style={{ fontSize: 11, color: '#8a8276', marginTop: 10, lineHeight: 1.6 }}>
+                大运管十年基调，流年定当年主题。如正官大运遇偏财流年，事业稳定中暗藏财富机会。
+              </div>
             </div>
 
             {/* TaiYuan / MingGong */}
@@ -230,6 +247,9 @@ export default function BaziResult() {
                   <div style={{ fontSize: 10, color: '#8a8276', marginBottom: 4 }}>命宫</div>
                   <div style={{ fontFamily: '"Noto Serif SC", Georgia, serif', fontSize: 18, fontWeight: 600, color: '#2a2622' }}>{chart.mingGong || '—'}</div>
                 </div>
+              </div>
+              <div style={{ fontSize: 11, color: '#8a8276', marginTop: 10, lineHeight: 1.6, textAlign: 'left' }}>
+                胎元为怀胎十月所禀之气，命宫为安身立命之所。二者辅助判断先天禀赋与后天发展方向。
               </div>
             </div>
           </div>
