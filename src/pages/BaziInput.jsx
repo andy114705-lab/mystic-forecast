@@ -58,11 +58,11 @@ export default function BaziInput() {
   };
 
   const Label = ({ children }) => (
-    <div className="text-[11px] text-white/25 uppercase tracking-[0.1em] mb-1.5">{children}</div>
+    <div className="text-xs text-white/40 uppercase tracking-[0.1em] mb-2">{children}</div>
   );
 
   return (
-    <div className="max-w-2xl mx-auto p-6 pt-16 animate-fade-in">
+    <div className="max-w-3xl mx-auto p-6 pt-16 animate-fade-in">
       {/* Header */}
       <div className="mb-12 text-center">
         <h2 className="text-3xl tracking-[0.1em] mb-2" 
