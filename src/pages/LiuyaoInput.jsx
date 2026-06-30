@@ -59,7 +59,7 @@ export default function LiuyaoInput() {
         body: JSON.stringify({ messages: [
           { role: 'system', content: LIUYAO_SYSTEM },
           { role: 'user', content: prompt },
-        ], temperature: 0.6, max_tokens: 2000 }),
+        ], temperature: 0.6, max_tokens: 1500 }),
       });
       const data = await resp.json();
       if (data.error) throw new Error(data.error.message);
@@ -72,69 +72,71 @@ export default function LiuyaoInput() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 pt-16 animate-fade-in">
-      <div className="mb-12 text-center">
-        <h2 className="text-3xl tracking-[0.1em] mb-2"
-          style={{ fontFamily: "Georgia, 'Noto Serif SC', serif", color: '#c9a55c' }}>
+    <div className="max-w-xl mx-auto p-6 pt-12 animate-fade-in">
+      <div className="mb-10 text-center">
+        <h2 
+          className="text-3xl font-bold mb-2 tracking-[0.15em]"
+          style={{ fontFamily: "Georgia, 'Noto Serif SC', serif", color: '#2c2416' }}
+        >
           六爻占卜
         </h2>
-        <p className="text-white/15 text-xs tracking-[0.2em] uppercase">I Ching Divination</p>
+        <p className="text-xs tracking-[0.3em] uppercase" style={{ color: '#8b7355' }}>I Ching Divination</p>
+        <div style={{ width: 36, height: 1, background: '#c43a31', opacity: 0.35, margin: '14px auto 0' }} />
       </div>
 
-      <form onSubmit={handleSubmit} className="card p-8 space-y-6">
-        <div>
-          <div className="text-[11px] text-white/25 uppercase tracking-[0.1em] mb-2">
-            所问之事
-          </div>
+      <form onSubmit={handleSubmit} style={{ background: '#fffdf7', border: '1px solid #e0d8c8', padding: 36 }} className="space-y-6">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-semibold tracking-[0.1em]" style={{ color: '#2c2416' }}>所问之事</label>
           <textarea
             placeholder="写下你想问的事，例如：「今年能不能升职加薪？」"
             value={question}
             onChange={e => setQuestion(e.target.value)}
             className="input w-full resize-none"
             rows={4}
-            style={{ lineHeight: '1.8', fontSize: '15px' }}
+            style={{ lineHeight: 1.8, fontSize: 15 }}
           />
         </div>
 
         {question && (
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-white/20">系统匹配用神</span>
-            <span className="text-cinnabar-300">{matchYongShen(question).join(' · ')}</span>
+            <span style={{ color: '#8b7355' }}>系统匹配用神</span>
+            <span style={{ color: '#c43a31', fontWeight: 600 }}>{matchYongShen(question).join(' · ')}</span>
           </div>
         )}
 
         {error && (
-          <div className="bg-cinnabar-500/10 border border-cinnabar-500/20 px-4 py-3 text-cinnabar-300 text-sm">
+          <div className="px-4 py-3 text-sm" style={{ background: 'rgba(196,58,49,0.06)', border: '1px solid rgba(196,58,49,0.15)', color: '#c43a31' }}>
             {error}
           </div>
         )}
 
-        <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 text-base">
-          {loading ? '起卦中 ···' : '起卦占卜'}
-        </button>
+        <div className="flex justify-center pt-2">
+          <button type="submit" disabled={loading} className="btn-primary">
+            {loading ? '起卦中...' : '起 卦 占 卜'}
+          </button>
+        </div>
 
-        <p className="text-white/10 text-xs text-center leading-relaxed">
-          系统自动摇卦 · 京房纳甲法 · 六爻装卦
+        <p className="text-xs text-center leading-relaxed" style={{ color: '#b8a88a' }}>
+          系统自动摇卦 · 京房纳甲法 · 一事一占
         </p>
       </form>
 
       <div className="mt-16 text-center">
-        <hr className="border-white/[0.04] w-24 mx-auto mb-3" />
-        <p className="text-[10px] text-white/10 tracking-[0.1em]">
-          一事一占 · 心诚则灵
-        </p>
+        <div style={{ width: 36, height: 1, background: '#c43a31', opacity: 0.35, margin: '0 auto 12px' }} />
+        <p className="text-xs tracking-[0.1em]" style={{ color: '#b8a88a' }}>心诚则灵 · 一事一断</p>
       </div>
     </div>
   );
 }
 
-const LIUYAO_SYSTEM = `你是专业六爻断卦师（京房纳甲法）。风格：现代简洁，术语必解释。
+const LIUYAO_SYSTEM = `你是专业六爻断卦师（京房纳甲法）。
 
 ## 输出结构
-### 一、卦象概述（本卦+变卦，一句话总结）
+### 一、卦象概述（本卦+变卦，一句总结）
 ### 二、用神定位（取何用神，在何爻，旺衰状态）
 ### 三、关键信号（动爻分析、世应关系、月建日辰影响）
 ### 四、吉凶判断（明确吉/凶/平+依据）
 ### 五、应期与建议
 
-禁止：不模棱两可、不编造爻象、每个判断有依据`;
+风格：现代简洁，术语首次出现括号解释。段落间留空行。
+禁止：模棱两可、编造爻象、每个判断必须有依据。`;

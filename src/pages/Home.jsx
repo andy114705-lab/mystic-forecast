@@ -3,40 +3,98 @@ import { Link } from 'react-router-dom';
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4">
+      {/* Seal + Title */}
       <div className="text-center mb-16">
-        <h1 
-          className="text-7xl font-normal mb-4 tracking-[0.15em]"
-          style={{ fontFamily: "Georgia, 'Noto Serif SC', serif", color: '#c9a55c' }}
+        <div 
+          className="inline-flex items-center justify-center mb-5"
+          style={{
+            width: 56, height: 56,
+            border: '2px solid #c43a31',
+            fontFamily: "Georgia, 'Noto Serif SC', serif",
+            fontSize: 28, fontWeight: 'bold',
+            color: '#c43a31',
+            background: '#fffdf7',
+          }}
         >
-          玄机
+          玄
+        </div>
+        <h1 
+          className="text-5xl font-bold mb-2 tracking-[0.25em]"
+          style={{ fontFamily: "Georgia, 'Noto Serif SC', serif", color: '#2c2416' }}
+        >
+          玄 机
         </h1>
-        <p className="text-white/10 text-xs tracking-[0.5em] uppercase mt-2">XUAN JI</p>
+        <p className="text-xs tracking-[0.4em] uppercase" style={{ color: '#8b7355', fontFamily: 'Georgia, serif' }}>
+          XUAN JI
+        </p>
       </div>
 
-      <div className="flex flex-wrap gap-8 justify-center">
-        <Link to="/bazi" className="card w-80 p-10 text-center group cursor-pointer no-underline hover:border-cinnabar-500/20 transition-colors duration-300">
-          <div className="text-6xl mb-6" style={{ color: '#c43a31', opacity: 0.5 }}>☰</div>
-          <h2 className="text-lg mb-3 tracking-[0.05em] text-white/80 group-hover:text-gold-400 transition-colors"
-            style={{ fontFamily: "Georgia, 'Noto Serif SC', serif" }}>
+      {/* Feature Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl w-full px-4">
+        <Link 
+          to="/bazi" 
+          className="no-underline text-center p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+          style={{ background: '#fffdf7', border: '1px solid #e0d8c8' }}
+        >
+          <div 
+            className="inline-flex items-center justify-center mb-4"
+            style={{
+              width: 44, height: 44,
+              border: '1px solid rgba(196,58,49,0.22)',
+              fontFamily: "Georgia, 'Noto Serif SC', serif",
+              fontSize: 20,
+              color: '#c43a31',
+            }}
+          >
+            命
+          </div>
+          <h2 
+            className="text-2xl font-bold mb-2 tracking-[0.2em]"
+            style={{ fontFamily: "Georgia, 'Noto Serif SC', serif", color: '#1a1a1a' }}
+          >
             八字命盘
           </h2>
-          <p className="text-white/25 text-sm leading-relaxed">输入生辰 · 四柱排盘 · 十神大运</p>
+          <p className="text-sm leading-relaxed tracking-[0.05em]" style={{ color: '#8b7355' }}>
+            四柱推演 · 五行生克
+            <br />排盘推运洞悉命理格局
+          </p>
         </Link>
 
-        <Link to="/liuyao" className="card w-80 p-10 text-center group cursor-pointer no-underline hover:border-cinnabar-500/20 transition-colors duration-300">
-          <div className="text-6xl mb-6" style={{ color: '#c43a31', opacity: 0.5 }}>☯</div>
-          <h2 className="text-lg mb-3 tracking-[0.05em] text-white/80 group-hover:text-gold-400 transition-colors"
-            style={{ fontFamily: "Georgia, 'Noto Serif SC', serif" }}>
+        <Link 
+          to="/liuyao" 
+          className="no-underline text-center p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+          style={{ background: '#fffdf7', border: '1px solid #e0d8c8' }}
+        >
+          <div 
+            className="inline-flex items-center justify-center mb-4"
+            style={{
+              width: 44, height: 44,
+              border: '1px solid rgba(196,58,49,0.22)',
+              fontFamily: "Georgia, 'Noto Serif SC', serif",
+              fontSize: 20,
+              color: '#c43a31',
+            }}
+          >
+            爻
+          </div>
+          <h2 
+            className="text-2xl font-bold mb-2 tracking-[0.2em]"
+            style={{ fontFamily: "Georgia, 'Noto Serif SC', serif", color: '#1a1a1a' }}
+          >
             六爻占卜
           </h2>
-          <p className="text-white/25 text-sm leading-relaxed">起卦问事 · 一事一断</p>
+          <p className="text-sm leading-relaxed tracking-[0.05em]" style={{ color: '#8b7355' }}>
+            起卦问事 · 爻象精解
+            <br />一事一问灵应有验
+          </p>
         </Link>
       </div>
 
-      <div className="mt-24 text-center">
-        <hr className="border-white/[0.04] w-32 mx-auto mb-4" />
-        <p className="text-[11px] tracking-[0.08em] text-white/10">
-          lunar-javascript · DeepSeek · 四维交叉验证
+      {/* Footer */}
+      <div className="mt-20 text-center">
+        <div style={{ width: 36, height: 1, background: '#c43a31', opacity: 0.35, margin: '0 auto 16px' }} />
+        <p className="text-xs tracking-[0.15em]" style={{ color: '#b8a88a' }}>
+          玄机 · 传统命理 · 现代演绎
         </p>
       </div>
     </div>

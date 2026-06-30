@@ -45,7 +45,7 @@ export default function BaziInput() {
         body: JSON.stringify({ messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: prompt },
-        ], temperature: 0.6, max_tokens: 4000 }),
+        ], temperature: 0.6, max_tokens: 2500 }),
       });
       const data = await resp.json();
       if (data.error) throw new Error(data.error.message);
@@ -58,30 +58,32 @@ export default function BaziInput() {
   };
 
   const Label = ({ children }) => (
-    <div className="text-xs text-white/40 uppercase tracking-[0.1em] mb-2">{children}</div>
+    <label className="text-sm font-semibold tracking-[0.1em]" style={{ color: '#2c2416' }}>{children}</label>
   );
 
   return (
-    <div className="max-w-3xl mx-auto p-6 pt-16 animate-fade-in">
-      {/* Header */}
-      <div className="mb-12 text-center">
-        <h2 className="text-3xl tracking-[0.1em] mb-2" 
-          style={{ fontFamily: "Georgia, 'Noto Serif SC', serif", color: '#c9a55c' }}>
+    <div className="max-w-2xl mx-auto p-6 pt-12 animate-fade-in">
+      <div className="mb-10 text-center">
+        <h2 
+          className="text-3xl font-bold mb-2 tracking-[0.15em]"
+          style={{ fontFamily: "Georgia, 'Noto Serif SC', serif", color: '#2c2416' }}
+        >
           八字命盘
         </h2>
-        <p className="text-white/15 text-xs tracking-[0.2em] uppercase">Four Pillars of Destiny</p>
+        <p className="text-xs tracking-[0.3em] uppercase" style={{ color: '#8b7355' }}>Four Pillars of Destiny</p>
+        <div style={{ width: 36, height: 1, background: '#c43a31', opacity: 0.35, margin: '14px auto 0' }} />
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Row 1: 姓名 */}
-        <div>
+      <form onSubmit={handleSubmit} className="space-y-7" style={{ background: '#fffdf7', border: '1px solid #e0d8c8', padding: 36 }}>
+        {/* Name */}
+        <div className="flex flex-col gap-1.5">
           <Label>姓名 / 称谓</Label>
           <input type="text" placeholder="选填，用于称呼" value={form.name}
             onChange={e => setForm({...form, name: e.target.value})} className="input w-full" />
         </div>
 
-        {/* Row 2: 日历类型 */}
-        <div>
+        {/* Calendar Type */}
+        <div className="flex flex-col gap-1.5">
           <Label>历法</Label>
           <div className="flex gap-2">
             {[{k:'solar',l:'阳历'},{k:'lunar',l:'阴历'}].map(t => (
@@ -91,13 +93,13 @@ export default function BaziInput() {
               </button>
             ))}
           </div>
-          <p className="text-white/15 text-xs mt-1.5 ml-1">
+          <p className="text-xs mt-1 ml-1" style={{ color: '#b8a88a' }}>
             {form.calendarType === 'solar' ? '公历（格里高利历）日期' : '农历日期，自动转换为公历排盘'}
           </p>
         </div>
 
-        {/* Row 3: 出生日期 */}
-        <div>
+        {/* Birth Date */}
+        <div className="flex flex-col gap-1.5">
           <Label>出生日期</Label>
           <div className="grid grid-cols-[2fr_1fr_1fr] gap-3">
             <input type="number" placeholder="年份" value={form.year}
@@ -109,9 +111,9 @@ export default function BaziInput() {
           </div>
         </div>
 
-        {/* Row 4: 时间 + 性别 */}
-        <div className="grid grid-cols-[1fr_1fr] gap-6">
-          <div>
+        {/* Time + Gender */}
+        <div className="grid grid-cols-[1fr_1fr] gap-5">
+          <div className="flex flex-col gap-1.5">
             <Label>出生时间</Label>
             <div className="grid grid-cols-2 gap-2">
               <input type="number" placeholder="时 (0-23)" value={form.hour}
@@ -120,21 +122,19 @@ export default function BaziInput() {
                 onChange={e => setForm({...form, minute: e.target.value})} className="input" />
             </div>
           </div>
-          <div>
+          <div className="flex flex-col gap-1.5">
             <Label>性别</Label>
             <div className="flex gap-2">
               {['男','女'].map(g => (
                 <button key={g} type="button" onClick={() => setForm({...form, gender: g})}
-                  className={`btn-toggle flex-1 ${form.gender === g ? 'active' : ''}`}>
-                  {g}
-                </button>
+                  className={`btn-toggle flex-1 ${form.gender === g ? 'active' : ''}`}>{g}</button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Row 5: 出生地点 */}
-        <div>
+        {/* Location */}
+        <div className="flex flex-col gap-1.5">
           <Label>出生地点</Label>
           <div className="relative">
             {form.manualLng ? (
@@ -142,7 +142,7 @@ export default function BaziInput() {
                 <input type="number" step="0.1" placeholder="输入经度，如 116.4" value={form.lng}
                   onChange={e => setForm({...form, lng: +e.target.value})} className="input flex-1" />
                 <button type="button" onClick={() => setForm({...form, manualLng: false, city: ''})}
-                  className="text-xs text-white/20 hover:text-white/40 px-3 whitespace-nowrap">
+                  className="text-xs px-3 whitespace-nowrap" style={{ color: '#b8a88a' }}>
                   选城市
                 </button>
               </div>
@@ -153,30 +153,34 @@ export default function BaziInput() {
                   onFocus={() => setCitySearch(citySearch || form.city)}
                   className="input flex-1" />
                 <button type="button" onClick={() => setForm({...form, manualLng: true, city: ''})}
-                  className="text-xs text-white/20 hover:text-white/40 px-3 whitespace-nowrap">
+                  className="text-xs px-3 whitespace-nowrap" style={{ color: '#b8a88a' }}>
                   手输经度
                 </button>
               </div>
             )}
             {citySearch && !form.manualLng && (
-              <div className="absolute z-20 mt-1 w-full bg-ink-800 border border-white/[0.06] max-h-56 overflow-y-auto">
+              <div className="absolute z-20 mt-1 w-full border max-h-56 overflow-y-auto"
+                style={{ background: '#fffdf7', borderColor: '#e0d8c8' }}>
                 {filteredCities.map(c => (
                   <div key={c.n} onClick={() => selectCity(c)}
-                    className="px-4 py-3 cursor-pointer hover:bg-cinnabar-500/10 text-sm text-white/60 flex justify-between border-b border-white/[0.03]">
+                    className="px-4 py-3 cursor-pointer text-sm flex justify-between border-b"
+                    style={{ color: '#2c2416', borderColor: '#ede6d8' }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(196,58,49,0.04)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                     <span>{c.n}</span>
-                    <span className="text-white/20">{c.lng}°E</span>
+                    <span style={{ color: '#b8a88a' }}>{c.lng}°E</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
           {form.city && (
-            <p className="text-white/20 text-xs mt-2 ml-1">
+            <p className="text-xs mt-2 ml-1" style={{ color: '#8b7355' }}>
               {form.city} · 经度 {form.lng}°E
             </p>
           )}
           {solarOffset !== 0 && (
-            <p className="text-cinnabar-400/70 text-xs mt-1 ml-1">
+            <p className="text-xs mt-1 ml-1" style={{ color: '#c43a31' }}>
               真太阳时修正 {solarOffset > 0 ? '+' : ''}{solarOffset} 分钟
             </p>
           )}
@@ -184,56 +188,39 @@ export default function BaziInput() {
 
         {/* Error */}
         {error && (
-          <div className="bg-cinnabar-500/10 border border-cinnabar-500/20 px-4 py-3 text-cinnabar-300 text-sm">
+          <div className="px-4 py-3 text-sm" style={{ background: 'rgba(196,58,49,0.06)', border: '1px solid rgba(196,58,49,0.15)', color: '#c43a31' }}>
             {error}
           </div>
         )}
 
         {/* Submit */}
-        <button type="submit" disabled={loading} className="btn-primary w-full py-3.5 text-base">
-          {loading ? '排盘中 ···' : '开始排盘解读'}
-        </button>
+        <div className="flex justify-center pt-3">
+          <button type="submit" disabled={loading} className="btn-primary">
+            {loading ? '排盘中...' : '开 始 排 盘'}
+          </button>
+        </div>
       </form>
     </div>
   );
 }
 
-const SYSTEM_PROMPT = `你是一位专业的八字命理师。采用**四维交叉验证法**，每一维独立判断后再交叉综合，不靠单一方法下结论。
+const SYSTEM_PROMPT = `你是一位专业的八字命理师。采用四维交叉验证法分析，每维独立判断后交叉综合。
 
 ## 四维框架
 | 维度 | 方法 | 回答的问题 |
 |------|------|-----------|
-| 旺衰法 | 日主在月令的得令失令 + 全局生扶克泄 | 能量强弱 |
+| 旺衰法 | 日主得令失令 + 全局生扶克泄 | 能量强弱 |
 | 格局法 | 月令本气透干取格 + 用神喜忌 | 社会定位 |
-| 调候法 | 冬生喜火/夏生喜水的寒暖燥湿平衡 | 舒适度 |
-| 病药法 | 八字最大缺陷（太旺/太弱/冲战）有无制化 | 危机化解力 |
-
-## 分析流程
-1. **旺衰判定**：日主得令否？得地否？得生扶否？综合定身强/身弱/中和。必须给出每个判断的具体依据。
-2. **格局取用**：月令藏干透出何神？立何格局？喜用神是什么？忌神是什么？
-3. **调候需求**：出生月份寒暖？需调候否？调候用神是否出现？
-4. **病药诊断**：八字最大的「病」是什么？有无「药」来制化？
-5. **四维交叉**：四个维度结论是否一致？不一致处展开调和分析。
-6. **专项分析**：事业财运、婚姻感情、健康、性格（2-3点精髓）
-7. **大运走势**：当前大运 + 当前流年 + 未来1-3年趋势
-8. **逐月分析**：当前流年12个月的干支十神 + 与原局大运的冲合关系 + 每月简要提示
+| 调候法 | 冬生喜火/夏生喜水 | 舒适度 |
+| 病药法 | 八字最大缺陷有无制化 | 危机化解力 |
 
 ## 输出格式
-用 Markdown，标题用 ###。每个判断必须标注信号强度：
-- ✅✅ 强信号（>=3个维度一致或单个维度证据极强）
-- ✅ 中等信号（2个维度一致或有明确生克关系）
-- ⚠️ 弱信号（单一维度且证据不充分）
+用 Markdown，标题用 ###。每项判断标注信号强度：✅✅强 / ✅中 / ⚠️弱。
+- 标题字号要醒目，段落间留空行
+- 现代简洁，术语首次出现括号解释
+- 不确定处标注"存疑"，不硬下结论
 
-## 风格要求
-- 现代、简洁、直白。每个术语首次出现时括号附白话解释。
-- 不确定的地方标注「存疑」，不硬下结论。
-
-## 禁止项
-- 禁止极端断语（「必定大富大贵」「一生悲惨」等）
-- 禁止孤证定论（单一信号作为确定性判断）
-- 禁止模糊不标来源（「可能」「也许」必须附置信度）
-- 禁止跳过四维中的任一维
-- 禁止编造不存在的冲合关系`;
+禁止：极端断语、孤证定论、编造冲合关系`;
 
 function buildPrompt(chart) {
   const p = chart.pillars;

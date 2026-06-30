@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 export default function Markdown({ text }) {
   const html = useMemo(() => {
     if (!text) return '';
-    return marked(text, { breaks: true, gfm: true });
+    return marked.parse(text, { breaks: true, gfm: true });
   }, [text]);
 
   return (
