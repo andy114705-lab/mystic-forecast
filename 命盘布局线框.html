@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#e9e4da;font-family:"Noto Sans SC",system-ui,sans-serif;color:#2a2622}
+  .wf-turn{padding:48px 52px 40px}
+  .ann-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#b23a2e;color:#fff;font:600 12px/1 "Noto Sans SC",sans-serif;flex:none}
+  .ann-num.sm{width:18px;height:18px;font-size:10px}
+  .ph{background:#e4ded2;border-radius:3px;display:block}
+  .dashbox{border:1.5px dashed #b9b0a0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#9a9a8e;text-align:center}
+</style>
+</helmet>
+
+<section class="wf-turn" id="t1">
+  <div style="display:flex;align-items:baseline;gap:12px;margin:0 0 6px">
+    <a href="#t1" style="font:600 11px ui-monospace,Menlo,monospace;padding:3px 8px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none">1</a>
+    <span style="font:600 15px/1.2 'Noto Sans SC',sans-serif;color:#1a1a1a">仪表盘式命盘 · 流年优先布局</span>
+  </div>
+  <p style="margin:0 0 30px;max-width:760px;font:400 13px/1.7 'Noto Sans SC',sans-serif;color:#6f685d">
+    把"今年运势"提到最顶端当主角，一屏给结论；命盘、五行、大运做成可交互的概览卡片，长篇解读折叠收纳。整体大量留白、细线分隔，替代原来从上到下的长表格 + 下拉框。下面是同一套设计的桌面端与移动端线框示意。
+  </p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start">
+
+    <!-- ============ DESKTOP FRAME ============ -->
+    <div id="1a" style="display:flex;flex-direction:column;gap:11px;scroll-margin-top:16px">
+      <div style="display:flex;align-items:baseline;gap:9px">
+        <a href="#1a" style="font:600 11px ui-monospace,Menlo,monospace;padding:3px 8px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none">1a</a>
+        <span style="font:400 12px 'Noto Sans SC',sans-serif;color:#6f685d">桌面端 — 一屏概览，点开看细节</span>
+      </div>
+
+      <div style="width:1140px;max-width:100%;background:#f6f2ea;border:1px solid #d7cebd;border-radius:12px;box-shadow:0 10px 40px rgba(60,45,25,.13);overflow:hidden">
+
+        <!-- top bar -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid #e6ddcc">
+          <div style="display:flex;align-items:center;gap:9px">
+            <span style="font-size:19px">☯</span>
+            <span style="font:600 18px 'Noto Serif SC',serif;letter-spacing:2px">玄机</span>
+          </div>
+          <span style="font:400 12px sans-serif;color:#9a9a8e">← 重新排盘</span>
+        </div>
+
+        <!-- HERO: current year -->
+        <div style="position:relative;padding:26px 28px;background:linear-gradient(180deg,#f1e9da,#f6f2ea)">
+          <span style="position:absolute;top:14px;right:14px" class="ann-num">1</span>
+          <div style="font:500 12px 'Noto Sans SC',sans-serif;letter-spacing:3px;color:#a98b5a;margin-bottom:14px">2026 · 当年运势</div>
+          <div style="display:flex;gap:34px;align-items:center;flex-wrap:wrap">
+            <!-- year glyph -->
+            <div style="flex:none;text-align:center">
+              <div style="font:700 60px/1 'Noto Serif SC',serif;color:#2a2622">丙午</div>
+              <div style="margin-top:10px;display:flex;gap:6px;justify-content:center">
+                <span style="font:500 11px sans-serif;color:#b23a2e;border:1px solid #d9a89f;border-radius:20px;padding:2px 10px">偏财年</span>
+                <span style="font:500 11px sans-serif;color:#7a7064;border:1px solid #cfc4b0;border-radius:20px;padding:2px 10px">己巳大运</span>
+              </div>
+            </div>
+            <!-- verdict -->
+            <div style="flex:1;min-width:200px">
+              <div style="font:600 21px/1.4 'Noto Serif SC',serif;color:#2a2622">"十年好运的开端"</div>
+              <div style="margin-top:8px"><span class="ph" style="width:90%;height:7px;margin-bottom:6px"></span><span class="ph" style="width:72%;height:7px"></span></div>
+            </div>
+            <!-- 4 score dials -->
+            <div style="position:relative;flex:none;display:flex;gap:14px">
+              <span style="position:absolute;top:-8px;right:-8px" class="ann-num sm">2</span>
+              <div style="text-align:center"><div style="width:54px;height:54px;border-radius:50%;border:4px solid #c4a44e;border-bottom-color:#e6ddcc;border-right-color:#e6ddcc;display:flex;align-items:center;justify-content:center;font:600 14px sans-serif">85</div><div style="font:400 11px sans-serif;color:#7a7064;margin-top:6px">事业</div></div>
+              <div style="text-align:center"><div style="width:54px;height:54px;border-radius:50%;border:4px solid #b23a2e;border-top-color:#e6ddcc;display:flex;align-items:center;justify-content:center;font:600 14px sans-serif">90</div><div style="font:400 11px sans-serif;color:#7a7064;margin-top:6px">财富</div></div>
+              <div style="text-align:center"><div style="width:54px;height:54px;border-radius:50%;border:4px solid #8a9a6b;border-left-color:#e6ddcc;border-bottom-color:#e6ddcc;display:flex;align-items:center;justify-content:center;font:600 14px sans-serif">70</div><div style="font:400 11px sans-serif;color:#7a7064;margin-top:6px">感情</div></div>
+              <div style="text-align:center"><div style="width:54px;height:54px;border-radius:50%;border:4px solid #6f8aa0;border-top-color:#e6ddcc;border-right-color:#e6ddcc;display:flex;align-items:center;justify-content:center;font:600 14px sans-serif">65</div><div style="font:400 11px sans-serif;color:#7a7064;margin-top:6px">健康</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- main two-column -->
+        <div style="display:flex;gap:18px;padding:20px 22px">
+
+          <!-- LEFT column -->
+          <div style="flex:1.35;display:flex;flex-direction:column;gap:16px;min-width:0">
+
+            <!-- 命盘 4 pillars -->
+            <div style="position:relative;background:#fff;border:1px solid #e6ddcc;border-radius:10px;padding:16px 16px 18px">
+              <span style="position:absolute;top:12px;right:12px" class="ann-num">4</span>
+              <div style="font:600 14px 'Noto Serif SC',serif;margin-bottom:14px">八字命盘</div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+                <div style="border:1px solid #ece3d3;border-radius:8px;padding:12px 6px;text-align:center"><div style="font:400 10px sans-serif;color:#a99">年柱</div><div style="font:700 26px 'Noto Serif SC',serif;margin:6px 0">己未</div><div style="font:400 10px sans-serif;color:#b23a2e">正官</div><div style="font:400 9px sans-serif;color:#bbb1a0;margin-top:8px">点击展开 ⌄</div></div>
+                <div style="border:1px solid #ece3d3;border-radius:8px;padding:12px 6px;text-align:center"><div style="font:400 10px sans-serif;color:#a99">月柱</div><div style="font:700 26px 'Noto Serif SC',serif;margin:6px 0">甲戌</div><div style="font:400 10px sans-serif;color:#b23a2e">食神</div><div style="font:400 9px sans-serif;color:#bbb1a0;margin-top:8px">点击展开 ⌄</div></div>
+                <div style="border:1.5px solid #d9a89f;background:#fbf2f0;border-radius:8px;padding:12px 6px;text-align:center"><div style="font:400 10px sans-serif;color:#b23a2e">日柱·日主</div><div style="font:700 26px 'Noto Serif SC',serif;margin:6px 0">壬子</div><div style="font:400 10px sans-serif;color:#b23a2e">日主</div><div style="font:400 9px sans-serif;color:#bbb1a0;margin-top:8px">点击展开 ⌄</div></div>
+                <div style="border:1px solid #ece3d3;border-radius:8px;padding:12px 6px;text-align:center"><div style="font:400 10px sans-serif;color:#a99">时柱</div><div style="font:700 26px 'Noto Serif SC',serif;margin:6px 0">辛亥</div><div style="font:400 10px sans-serif;color:#b23a2e">正印</div><div style="font:400 9px sans-serif;color:#bbb1a0;margin-top:8px">点击展开 ⌄</div></div>
+              </div>
+              <div style="margin-top:12px;font:400 10px sans-serif;color:#a99a8e">展开后显示：纳音 · 藏干 · 地势 · 旬空 · 神煞</div>
+            </div>
+
+            <!-- 五行 ring + 概览 chips -->
+            <div style="display:flex;gap:16px">
+              <div style="position:relative;flex:1;background:#fff;border:1px solid #e6ddcc;border-radius:10px;padding:16px;text-align:center">
+                <span style="position:absolute;top:12px;right:12px" class="ann-num">3</span>
+                <div style="font:600 14px 'Noto Serif SC',serif;margin-bottom:12px;text-align:left">五行能量</div>
+                <div class="dashbox" style="width:150px;height:150px;border-radius:50%;margin:0 auto;font:400 11px sans-serif;color:#a99a8e">环形 / 雷达图<br>金1 木1 水3<br>火0 土3</div>
+                <div style="margin-top:10px;font:400 10px sans-serif;color:#a99a8e">直观看出 水/土 偏旺 · 火为0 的失衡</div>
+              </div>
+              <div style="flex:1;background:#fff;border:1px solid #e6ddcc;border-radius:10px;padding:16px">
+                <div style="font:600 14px 'Noto Serif SC',serif;margin-bottom:12px">命主概览</div>
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <div style="display:flex;justify-content:space-between"><span style="font:400 12px sans-serif;color:#9a9a8e">日主</span><span style="font:600 13px 'Noto Serif SC',serif;color:#b23a2e">壬水</span></div>
+                  <div style="display:flex;justify-content:space-between"><span style="font:400 12px sans-serif;color:#9a9a8e">格局</span><span style="font:600 13px 'Noto Serif SC',serif;color:#b23a2e">七杀格</span></div>
+                  <div style="display:flex;justify-content:space-between"><span style="font:400 12px sans-serif;color:#9a9a8e">旺衰</span><span style="font:600 13px 'Noto Serif SC',serif;color:#b23a2e">身强</span></div>
+                  <div style="display:flex;justify-content:space-between"><span style="font:400 12px sans-serif;color:#9a9a8e">星座 / 生肖</span><span style="font:600 13px 'Noto Serif SC',serif">天秤 · 羊</span></div>
+                  <div style="display:flex;justify-content:space-between"><span style="font:400 12px sans-serif;color:#9a9a8e">公历</span><span style="font:500 12px sans-serif">1979-10-12 23:12</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT column -->
+          <div style="flex:1;display:flex;flex-direction:column;gap:16px;min-width:0">
+
+            <!-- 大运 timeline -->
+            <div style="position:relative;background:#fff;border:1px solid #e6ddcc;border-radius:10px;padding:16px">
+              <span style="position:absolute;top:12px;right:12px" class="ann-num">5</span>
+              <div style="font:600 14px 'Noto Serif SC',serif;margin-bottom:6px">大运 · 时间轴</div>
+              <div style="font:400 10px sans-serif;color:#a99a8e;margin-bottom:16px">逆行起运 · 3岁起运 — 拖动查看各步大运</div>
+              <!-- track -->
+              <div style="position:relative;height:2px;background:#e6ddcc;margin:0 8px 0">
+                <div style="position:absolute;left:0;width:62%;height:2px;background:#c4a44e"></div>
+                <div style="position:absolute;left:62%;top:-5px;width:12px;height:12px;border-radius:50%;background:#b23a2e;transform:translateX(-50%)"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:12px">
+                <div style="text-align:center"><div style="font:600 13px 'Noto Serif SC',serif;color:#bbb1a0">辛未</div><div style="font:400 9px sans-serif;color:#bbb">23-32</div></div>
+                <div style="text-align:center"><div style="font:600 13px 'Noto Serif SC',serif;color:#bbb1a0">庚午</div><div style="font:400 9px sans-serif;color:#bbb">33-42</div></div>
+                <div style="text-align:center"><div style="font:700 17px 'Noto Serif SC',serif;color:#b23a2e">己巳</div><div style="font:500 9px sans-serif;color:#b23a2e">43-52 当前</div></div>
+                <div style="text-align:center"><div style="font:600 13px 'Noto Serif SC',serif;color:#bbb1a0">戊辰</div><div style="font:400 9px sans-serif;color:#bbb">53-62</div></div>
+                <div style="text-align:center"><div style="font:600 13px 'Noto Serif SC',serif;color:#bbb1a0">丁卯</div><div style="font:400 9px sans-serif;color:#bbb">63-72</div></div>
+              </div>
+            </div>
+
+            <!-- 当前流年详情 -->
+            <div style="background:#fff;border:1px solid #e6ddcc;border-radius:10px;padding:16px">
+              <div style="font:600 14px 'Noto Serif SC',serif;margin-bottom:12px">当前流年关系</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 10px">
+                <div><div style="font:400 10px sans-serif;color:#a99a8e">所处大运</div><div style="font:600 15px 'Noto Serif SC',serif">己巳</div></div>
+                <div><div style="font:400 10px sans-serif;color:#a99a8e">流年</div><div style="font:600 15px 'Noto Serif SC',serif">丙午</div></div>
+                <div><div style="font:400 10px sans-serif;color:#a99a8e">大运十神</div><div style="font:500 13px sans-serif;color:#b23a2e">正官 · 十年基调</div></div>
+                <div><div style="font:400 10px sans-serif;color:#a99a8e">流年十神</div><div style="font:500 13px sans-serif;color:#b23a2e">偏财 · 当年主题</div></div>
+              </div>
+            </div>
+
+            <!-- 胎元命宫 small -->
+            <div style="background:#fff;border:1px solid #e6ddcc;border-radius:10px;padding:16px;display:flex;gap:24px">
+              <div><div style="font:400 10px sans-serif;color:#a99a8e">胎元</div><div style="font:600 18px 'Noto Serif SC',serif">乙丑</div></div>
+              <div style="width:1px;background:#eee5d4"></div>
+              <div><div style="font:400 10px sans-serif;color:#a99a8e">命宫</div><div style="font:600 18px 'Noto Serif SC',serif">壬申</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 流月 ribbon -->
+        <div style="padding:4px 22px 18px">
+          <div style="font:600 14px 'Noto Serif SC',serif;margin:0 0 12px 2px">2026 流月</div>
+          <div style="display:flex;gap:8px;overflow:hidden">
+            <div style="flex:none;width:62px;border:1px solid #ece3d3;border-radius:7px;padding:8px 4px;text-align:center"><div style="font:400 9px sans-serif;color:#a99">1月</div><div style="font:600 14px 'Noto Serif SC',serif;margin:3px 0">己丑</div><div style="font:400 9px sans-serif;color:#b23a2e">正官</div></div>
+            <div style="flex:none;width:62px;border:1px solid #ece3d3;border-radius:7px;padding:8px 4px;text-align:center"><div style="font:400 9px sans-serif;color:#a99">2月</div><div style="font:600 14px 'Noto Serif SC',serif;margin:3px 0">庚寅</div><div style="font:400 9px sans-serif;color:#b23a2e">偏印</div></div>
+            <div style="flex:none;width:62px;border:1px solid #ece3d3;border-radius:7px;padding:8px 4px;text-align:center"><div style="font:400 9px sans-serif;color:#a99">3月</div><div style="font:600 14px 'Noto Serif SC',serif;margin:3px 0">辛卯</div><div style="font:400 9px sans-serif;color:#b23a2e">正印</div></div>
+            <div style="flex:none;width:62px;border:1.5px solid #d9a89f;background:#fbf2f0;border-radius:7px;padding:8px 4px;text-align:center"><div style="font:400 9px sans-serif;color:#b23a2e">6月·今</div><div style="font:600 14px 'Noto Serif SC',serif;margin:3px 0">甲午</div><div style="font:400 9px sans-serif;color:#b23a2e">食神</div></div>
+            <div style="flex:none;width:62px;border:1px solid #ece3d3;border-radius:7px;padding:8px 4px;text-align:center"><div style="font:400 9px sans-serif;color:#a99">7月</div><div style="font:600 14px 'Noto Serif SC',serif;margin:3px 0">乙未</div><div style="font:400 9px sans-serif;color:#b23a2e">伤官</div></div>
+            <div style="flex:none;width:62px;border:1px solid #ece3d3;border-radius:7px;padding:8px 4px;text-align:center"><div style="font:400 9px sans-serif;color:#a99">8月</div><div style="font:600 14px 'Noto Serif SC',serif;margin:3px 0">丙申</div><div style="font:400 9px sans-serif;color:#b23a2e">偏财</div></div>
+            <div style="flex:none;display:flex;align-items:center;color:#bbb1a0;font-size:18px;padding:0 4px">···</div>
+          </div>
+        </div>
+
+        <!-- 深度解读 accordions -->
+        <div style="position:relative;padding:8px 22px 24px">
+          <span style="position:absolute;top:14px;right:22px" class="ann-num">6</span>
+          <div style="font:600 14px 'Noto Serif SC',serif;margin:0 0 12px 2px">深度解读 <span style="font:400 10px sans-serif;color:#a99a8e">— 默认收起，需要时展开</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e6ddcc;border-radius:9px;padding:14px 16px"><span style="font:600 13px 'Noto Serif SC',serif">四维交叉验证 · 旺衰 / 格局 / 调候 / 病药</span><span style="color:#b23a2e">⌄</span></div>
+            <div style="background:#fff;border:1px solid #e6ddcc;border-radius:9px;padding:14px 16px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font:600 13px 'Noto Serif SC',serif">AI 综合解读 · 壬子日主，七杀格</span><span style="color:#b23a2e">⌃</span></div>
+              <span class="ph" style="width:100%;height:7px;margin-bottom:6px"></span><span class="ph" style="width:96%;height:7px;margin-bottom:6px"></span><span class="ph" style="width:60%;height:7px"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e6ddcc;border-radius:9px;padding:14px 16px"><span style="font:600 13px 'Noto Serif SC',serif">核心建议 · 事业 / 财富 / 感情 / 健康</span><span style="color:#b23a2e">⌄</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ MOBILE FRAME + LEGEND ============ -->
+    <div id="1b" style="display:flex;flex-direction:column;gap:11px;scroll-margin-top:16px">
+      <div style="display:flex;align-items:baseline;gap:9px">
+        <a href="#1b" style="font:600 11px ui-monospace,Menlo,monospace;padding:3px 8px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none">1b</a>
+        <span style="font:400 12px 'Noto Sans SC',sans-serif;color:#6f685d">移动端 — 同套结构竖向折叠</span>
+      </div>
+
+      <div style="display:flex;gap:26px;align-items:flex-start">
+
+        <!-- phone -->
+        <div style="flex:none;width:300px;background:#f6f2ea;border:8px solid #2a2622;border-radius:34px;overflow:hidden;box-shadow:0 12px 36px rgba(60,45,25,.2)">
+          <div style="height:24px;background:#f1e9da;display:flex;align-items:center;justify-content:center"><div style="width:70px;height:5px;border-radius:3px;background:#cabfa8"></div></div>
+          <!-- topbar -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #e6ddcc">
+            <span style="font:600 16px 'Noto Serif SC',serif;letter-spacing:1px">☯ 玄机</span>
+            <span style="font:400 11px sans-serif;color:#a99a8e">重新排盘</span>
+          </div>
+          <div style="padding:16px 14px;display:flex;flex-direction:column;gap:14px">
+            <!-- hero -->
+            <div style="background:linear-gradient(180deg,#f1e9da,#fff);border:1px solid #e6ddcc;border-radius:12px;padding:18px 16px;text-align:center">
+              <div style="font:500 10px sans-serif;letter-spacing:2px;color:#a98b5a">2026 当年运势</div>
+              <div style="font:700 40px 'Noto Serif SC',serif;margin:8px 0">丙午</div>
+              <div style="display:flex;gap:6px;justify-content:center;margin-bottom:10px"><span style="font:500 10px sans-serif;color:#b23a2e;border:1px solid #d9a89f;border-radius:20px;padding:2px 9px">偏财年</span></div>
+              <div style="font:600 14px 'Noto Serif SC',serif">"十年好运的开端"</div>
+            </div>
+            <!-- 2x2 score -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+              <div style="background:#fff;border:1px solid #e6ddcc;border-radius:9px;padding:11px;display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;border:3px solid #c4a44e;border-bottom-color:#e6ddcc"></div><div><div style="font:600 14px sans-serif">85</div><div style="font:400 10px sans-serif;color:#9a9a8e">事业</div></div></div>
+              <div style="background:#fff;border:1px solid #e6ddcc;border-radius:9px;padding:11px;display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;border:3px solid #b23a2e;border-top-color:#e6ddcc"></div><div><div style="font:600 14px sans-serif">90</div><div style="font:400 10px sans-serif;color:#9a9a8e">财富</div></div></div>
+              <div style="background:#fff;border:1px solid #e6ddcc;border-radius:9px;padding:11px;display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;border:3px solid #8a9a6b;border-left-color:#e6ddcc"></div><div><div style="font:600 14px sans-serif">70</div><div style="font:400 10px sans-serif;color:#9a9a8e">感情</div></div></div>
+              <div style="background:#fff;border:1px solid #e6ddcc;border-radius:9px;padding:11px;display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;border:3px solid #6f8aa0;border-top-color:#e6ddcc"></div><div><div style="font:600 14px sans-serif">65</div><div style="font:400 10px sans-serif;color:#9a9a8e">健康</div></div></div>
+            </div>
+            <!-- tabs -->
+            <div style="display:flex;background:#ece3d3;border-radius:9px;padding:3px">
+              <div style="flex:1;text-align:center;background:#fff;border-radius:7px;padding:7px 0;font:600 12px 'Noto Serif SC',serif;box-shadow:0 1px 2px rgba(0,0,0,.05)">运势</div>
+              <div style="flex:1;text-align:center;padding:7px 0;font:400 12px 'Noto Serif SC',serif;color:#9a9a8e">命盘</div>
+              <div style="flex:1;text-align:center;padding:7px 0;font:400 12px 'Noto Serif SC',serif;color:#9a9a8e">解读</div>
+            </div>
+            <!-- 五行 ring -->
+            <div style="background:#fff;border:1px solid #e6ddcc;border-radius:10px;padding:14px;text-align:center">
+              <div style="font:600 13px 'Noto Serif SC',serif;text-align:left;margin-bottom:10px">五行能量</div>
+              <div class="dashbox" style="width:120px;height:120px;border-radius:50%;margin:0 auto;font:400 10px sans-serif;color:#a99a8e">环形 / 雷达<br>水土偏旺·火0</div>
+            </div>
+            <!-- 大运 scroll -->
+            <div style="background:#fff;border:1px solid #e6ddcc;border-radius:10px;padding:14px">
+              <div style="font:600 13px 'Noto Serif SC',serif;margin-bottom:10px">大运时间轴 →</div>
+              <div style="display:flex;gap:7px;overflow:hidden">
+                <div style="flex:none;text-align:center;opacity:.5"><div style="font:600 13px 'Noto Serif SC',serif">庚午</div><div style="font:400 8px sans-serif">33-42</div></div>
+                <div style="flex:none;text-align:center;border:1.5px solid #d9a89f;background:#fbf2f0;border-radius:7px;padding:5px 9px"><div style="font:700 15px 'Noto Serif SC',serif;color:#b23a2e">己巳</div><div style="font:400 8px sans-serif;color:#b23a2e">43-52</div></div>
+                <div style="flex:none;text-align:center;opacity:.5"><div style="font:600 13px 'Noto Serif SC',serif">戊辰</div><div style="font:400 8px sans-serif">53-62</div></div>
+                <div style="flex:none;text-align:center;opacity:.5"><div style="font:600 13px 'Noto Serif SC',serif">丁卯</div><div style="font:400 8px sans-serif">63-72</div></div>
+              </div>
+            </div>
+            <!-- accordion rows -->
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="display:flex;justify-content:space-between;background:#fff;border:1px solid #e6ddcc;border-radius:9px;padding:12px 13px;font:600 12px 'Noto Serif SC',serif">四维交叉验证 <span style="color:#b23a2e">⌄</span></div>
+              <div style="display:flex;justify-content:space-between;background:#fff;border:1px solid #e6ddcc;border-radius:9px;padding:12px 13px;font:600 12px 'Noto Serif SC',serif">核心建议 <span style="color:#b23a2e">⌄</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEGEND -->
+        <div style="flex:none;width:300px;background:#f6f2ea;border:1px solid #d7cebd;border-radius:12px;padding:20px 18px">
+          <div style="font:600 14px 'Noto Serif SC',serif;margin-bottom:16px">设计要点</div>
+          <div style="display:flex;flex-direction:column;gap:15px">
+            <div style="display:flex;gap:11px"><span class="ann-num">1</span><div style="font:400 12px/1.55 sans-serif;color:#5c554a"><b style="color:#2a2622">流年当主角</b> — 今年干支 + 一句话结论 + 事业/财富/感情/健康四维评分，进来一屏就有答案。</div></div>
+            <div style="display:flex;gap:11px"><span class="ann-num">2</span><div style="font:400 12px/1.55 sans-serif;color:#5c554a"><b style="color:#2a2622">运势评分环</b> — 抽象的吉凶变成可比的分数刻度，一眼看强弱。</div></div>
+            <div style="display:flex;gap:11px"><span class="ann-num">3</span><div style="font:400 12px/1.55 sans-serif;color:#5c554a"><b style="color:#2a2622">五行环形/雷达图</b> — 替代柱状条，直观看出水土偏旺、火为0的失衡。</div></div>
+            <div style="display:flex;gap:11px"><span class="ann-num">4</span><div style="font:400 12px/1.55 sans-serif;color:#5c554a"><b style="color:#2a2622">四柱卡片化</b> — 默认只显示干支+十神，点击展开藏干/纳音/神煞，去掉拥挤的大表格。</div></div>
+            <div style="display:flex;gap:11px"><span class="ann-num">5</span><div style="font:400 12px/1.55 sans-serif;color:#5c554a"><b style="color:#2a2622">大运时间轴</b> — 可拖动滑块，当前大运高亮，一条线看完一生节奏。</div></div>
+            <div style="display:flex;gap:11px"><span class="ann-num">6</span><div style="font:400 12px/1.55 sans-serif;color:#5c554a"><b style="color:#2a2622">长文折叠收纳</b> — 四维验证 / AI解读 / 核心建议默认收起，保持概览清爽。</div></div>
+          </div>
+          <div style="margin-top:18px;padding-top:16px;border-top:1px solid #e6ddcc;font:400 11px/1.6 sans-serif;color:#8a8276">移动端把"概览→命盘→解读"做成顶部分段切换；桌面端则左右分栏一屏铺开。配色延续浅米+朱砂红的东方古典，但用细线和留白替代密集表格。</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+</body>
+</html>
