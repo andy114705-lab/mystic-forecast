@@ -43,8 +43,39 @@ export default function BaziResult() {
   const p = chart.pillars;
   const now = new Date();
   const liunianYear = chart.liunian?.year || now.getFullYear();
-  const ringScores = { 事业: 85, 财富: 90, 感情: 70, 健康: 65 };
+
+  // Parse scores from interpretation
+  const defaultScores = { 事业: 75, 财富: 75, 感情: 70, 健康: 70 };
+  const scoreMatch = interpretation?.match(/\[评分\]\s*事业:(\d+)\s*财富:(\d+)\s*感情:(\d+)\s*健康:(\d+)/);
+  const scores = scoreMatch
+    ? { 事业: parseInt(scoreMatch[1]), 财富: parseInt(scoreMatch[2]), 感情: parseInt(scoreMatch[3]), 健康: parseInt(scoreMatch[4]) }
+    : defaultScores;
   const ringColors = { 事业: '#c4a44e', 财富: '#b23a2e', 感情: '#8a9a6b', 健康: '#6f8aa0' };
+
+  // Split interpretation into sections by ## headers
+  const sections = {};
+  const sectionOrder = [];
+  if (interpretation) {
+    const parts = interpretation.split(/\n## /);
+    for (const part of parts) {
+      const trimmed = part.trim();
+      if (!trimmed) continue;
+      const nlIdx = trimmed.indexOf('\n');
+      const title = nlIdx > 0 ? trimmed.substring(0, nlIdx).trim() : trimmed;
+      const content = nlIdx > 0 ? trimmed.substring(nlIdx + 1).trim() : '';
+      // Skip the score line in content
+      const cleanContent = content.replace(/\[评分\].*/g, '').trim();
+      sections[title] = cleanContent;
+      sectionOrder.push(title);
+    }
+  }
+
+  // Find specific sections
+  const siweiContent = sections['四维交叉验证'] || sections['四维交叉验证分析'] || '';
+  const liunianContent = sections['流年分析'] || '';
+  const adviceContent = sections['核心建议'] || '';
+  // Fallback: if sections not found, use raw interpretation
+  const mainContent = (siweiContent || liunianContent || adviceContent) ? '' : interpretation;
 
   // For mobile tab switching
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
@@ -94,7 +125,7 @@ export default function BaziResult() {
 
           {/* Right: 4 score rings */}
           <div style={{ display: 'flex', gap: 20 }}>
-            {Object.entries(ringScores).map(([k, v]) => (
+            {Object.entries(scores).map(([k, v]) => (
               <ScoreRing key={k} label={k} score={v} color={ringColors[k]} />
             ))}
           </div>
@@ -128,7 +159,7 @@ export default function BaziResult() {
               <div style={{ fontFamily: '"Noto Serif SC", Georgia, serif', fontSize: 14, fontWeight: 600, color: '#2a2622', marginBottom: 12, letterSpacing: 1 }}>
                 八字命盘
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: 8 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 <PillarCard pillar={p.year} label="年柱" />
                 <PillarCard pillar={p.month} label="月柱" />
                 <PillarCard pillar={p.day} label="日柱" isDayMaster />
@@ -211,7 +242,7 @@ export default function BaziResult() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div className="card-dash" style={{ padding: 16 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-around', gap: 12 }}>
-                  {Object.entries(ringScores).map(([k, v]) => (
+                  {Object.entries(scores).map(([k, v]) => (
                     <ScoreRing key={k} label={k} score={v} color={ringColors[k]} />
                   ))}
                 </div>
@@ -246,7 +277,7 @@ export default function BaziResult() {
                 <div style={{ fontFamily: '"Noto Serif SC", Georgia, serif', fontSize: 14, fontWeight: 600, color: '#2a2622', marginBottom: 10 }}>
                   八字命盘
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: 8 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                   <PillarCard pillar={p.year} label="年柱" />
                   <PillarCard pillar={p.month} label="月柱" />
                   <PillarCard pillar={p.day} label="日柱" isDayMaster />
@@ -282,13 +313,14 @@ export default function BaziResult() {
           {/* Tab: 解读 */}
           {tab === '解读' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <Accordion title="四维交叉验证 · 旺衰/格局/调候/病药">
-                <Markdown text={interpretation} />
+              <Accordion title="四维交叉验证 · 综合分析">
+                <Markdown text={siweiContent || mainContent || interpretation} />
               </Accordion>
-              <Accordion title="核心建议 · 事业/财富/感情/健康">
-                <div style={{ color: '#6f685d', fontSize: 13 }}>
-                  解读内容已包含在四维交叉验证中，请查看上方。
-                </div>
+              <Accordion title={`流年${liunianYear}年${chart.liunian?.ganZhi || ''}分析`}>
+                <Markdown text={liunianContent || mainContent || '流年分析内容正在生成中...'} />
+              </Accordion>
+              <Accordion title="核心建议 · 综合结论+事业/财富/感情/健康">
+                <Markdown text={adviceContent || mainContent || '核心建议内容正在生成中...'} />
               </Accordion>
               {chart.steps?.length > 0 && (
                 <Accordion title="推导链 · 排盘过程">
@@ -323,16 +355,14 @@ export default function BaziResult() {
             深度解读
             <span style={{ fontSize: 11, color: '#b9b0a0', marginLeft: 8, fontWeight: 400 }}>收起时点击展开</span>
           </div>
-          <Accordion title="四维交叉验证 · 旺衰/格局/调候/病药">
-            <Markdown text={interpretation} />
+          <Accordion title="四维交叉验证 · 综合分析">
+            <Markdown text={siweiContent || mainContent || interpretation} />
           </Accordion>
-          <Accordion title="AI 综合解读">
-            <Markdown text={interpretation} />
+          <Accordion title={`流年${liunianYear}年${chart.liunian?.ganZhi || ''}分析`}>
+            <Markdown text={liunianContent || mainContent || interpretation} />
           </Accordion>
-          <Accordion title="核心建议 · 事业/财富/感情/健康">
-            <div style={{ color: '#6f685d', fontSize: 13 }}>
-              建议内容已包含在上方解读中。如需独立分析，请在排盘时添加对应需求。
-            </div>
+          <Accordion title="核心建议 · 综合结论+事业/财富/感情/健康">
+            <Markdown text={adviceContent || mainContent || interpretation} />
           </Accordion>
           {chart.steps?.length > 0 && (
             <Accordion title="推导链 · 完整排盘过程">
