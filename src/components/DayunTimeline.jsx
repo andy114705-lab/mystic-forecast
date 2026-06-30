@@ -1,3 +1,5 @@
+import { tenGodDesc } from '../lib/tenGodDesc.js';
+
 export default function DayunTimeline({ dayunList, currentYear }) {
   const filtered = dayunList.filter(d => d.ganZhi);
   return (
@@ -41,11 +43,16 @@ export default function DayunTimeline({ dayunList, currentYear }) {
           );
         })}
       </div>
-      {/* Brief description */}
-      <div style={{ fontSize: 11, color: '#8a8276', marginTop: 8, lineHeight: 1.6 }}>
-        每步大运管十年运势基调。大运干支的十神决定了这十年的主题——如正官运主事业升迁，偏财运主投资机遇。
-        红色节点为当前所处大运阶段。
-      </div>
+      {/* Brief description based on actual data */}
+      {(() => {
+        const current = filtered.find(d => d.startYear <= currentYear && d.endYear >= currentYear);
+        const desc = tenGodDesc[current?.tenGod] || '';
+        return desc ? (
+          <div style={{ fontSize: 11, color: '#8a8276', marginTop: 8, lineHeight: 1.6 }}>
+            {desc}
+          </div>
+        ) : null;
+      })()}
     </div>
   );
 }

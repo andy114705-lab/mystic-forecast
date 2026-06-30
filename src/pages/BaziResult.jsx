@@ -6,6 +6,7 @@ import PillarCard from '../components/PillarCard.jsx';
 import FiveElementsChart from '../components/FiveElementsChart.jsx';
 import DayunTimeline from '../components/DayunTimeline.jsx';
 import LiuyueRibbon from '../components/LiuyueRibbon.jsx';
+import { tenGodDesc, liunianRelationDesc } from '../lib/tenGodDesc.js';
 
 const InfoRow = ({ label, value }) => (
   <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #f0ebe0', fontSize: 13 }}>
@@ -229,7 +230,7 @@ export default function BaziResult() {
                 <InfoRow label="流年十神" value={chart.liunian?.tenGod || '—'} />
               </div>
               <div style={{ fontSize: 11, color: '#8a8276', marginTop: 10, lineHeight: 1.6 }}>
-                大运管十年基调，流年定当年主题。如正官大运遇偏财流年，事业稳定中暗藏财富机会。
+                {liunianRelationDesc(chart.liunian?.dayunTenGod, chart.liunian?.tenGod)}
               </div>
             </div>
 
